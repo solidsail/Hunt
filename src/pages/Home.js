@@ -3,15 +3,15 @@ import { IonPage, IonContent } from "@ionic/react";
 import SmallHeader from "../components/Header/SmallHeader";
 import LargeHeader from "../components/Header/LargeHeader";
 
-const Submit = () => {
+const Home = () => {
   return (
     <IonPage>
-      <SmallHeader title="Submit" />
+      <SmallHeader title="Hunt" />
       <IonContent fullscreen>
-        <LargeHeader title="Submit" />
+        <LargeHeader title="Hunt" />
       </IonContent>
     </IonPage>
   );
 };
 
-export default Submit;
+export default Home;

@@ -17,7 +17,7 @@ import {
   createOutline,
   trendingUpOutline,
 } from "ionicons/icons";
-import Products from "./pages/Products";
+import Home from "./pages/Home";
 import Trending from "./pages/Trending";
 import Submit from "./pages/Submit";
 import Search from "./pages/Search";
@@ -50,18 +50,18 @@ const App = () => {
           <IonRouterOutlet>
             <Route
               path="/"
-              render={() => <Redirect to="/news" />}
+              render={() => <Redirect to="/home" />}
               exact={true}
             />
-            <Route path="/products" component={Products} />
+            <Route path="/home" component={Home} />
             <Route path="/trending" component={Trending} />
             <Route path="/submit" component={Submit} />
             <Route path="/search" component={Search} />
             <Route path="/profile" component={Profile} />
-            <Route component={() => <Redirect to="/products" />} />
+            <Route component={() => <Redirect to="/home" />} />
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
-            <IonTabButton tab="news" href="/products">
+            <IonTabButton tab="home" href="/home">
               <IonIcon icon={listCircleOutline} />
               <IonLabel>Hunt</IonLabel>
             </IonTabButton>
