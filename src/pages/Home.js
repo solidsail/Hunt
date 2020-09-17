@@ -1,14 +1,17 @@
 import React from "react";
-import { IonPage, IonContent } from "@ionic/react";
+import { IonContent, IonPage } from "@ionic/react";
+import ProductList from "../components/Product/ProductList";
 import SmallHeader from "../components/Header/SmallHeader";
 import LargeHeader from "../components/Header/LargeHeader";
 
-const Home = () => {
+const Home = (props) => {
   return (
     <IonPage>
       <SmallHeader title="Hunt" />
-      <IonContent fullscreen>
+      <IonContent color="medium" fullscreen>
         <LargeHeader title="Hunt" />
+        <br></br>
+        <ProductList location={props.location} />
       </IonContent>
     </IonPage>
   );
