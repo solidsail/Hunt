@@ -15,6 +15,7 @@ import firebase from "../firebase";
 import UserContext from "../contexts/UserContext";
 import SmallHeader from "../components/Header/SmallHeader";
 import LargeHeader from "../components/Header/LargeHeader";
+import Upload from "../components/Form/Upload";
 import { toast } from "../utils/toast";
 
 const INITIAL_STATE = {
@@ -26,6 +27,8 @@ const INITIAL_STATE = {
 const Submit = ({ history }) => {
   const { user } = React.useContext(UserContext);
   const [submitting, setSubmitting] = React.useState(false);
+  const [thumb, setThumb] = React.useState([]);
+  const [photos, setPhotos] = React.useState([]);
   const { handleSubmit, handleChange, values } = useFormValidation(
     INITIAL_STATE,
     validateCreateProduct,
@@ -44,6 +47,39 @@ const Submit = ({ history }) => {
       const { url, description, title } = values;
       const id = firebase.db.collection("products").doc().id;
 
+      await Promise.all([
+        ...thumb.map((f, index) =>
+          firebase.storage
+            .ref()
+            .child(`products/${id}_thumb_${index}.jpg`)
+            .put(f)
+        ),
+        ...photos.map((f, index) =>
+          firebase.storage
+            .ref()
+            .child(`products/${id}_photo_${index}.jpg`)
+            .put(f)
+        ),
+      ]);
+
+      const productPhotos = await Promise.all(
+        photos.map((f, index) =>
+          firebase.storage
+            .ref()
+            .child(`products/${id}_photo_${index}.jpg`)
+            .getDownloadURL()
+        )
+      );
+
+      const productThumbs = await Promise.all(
+        thumb.map((f, index) =>
+          firebase.storage
+            .ref()
+            .child(`products/${id}_thumb_${index}.jpg`)
+            .getDownloadURL()
+        )
+      );
+
       const newProduct = {
         title,
         url,
@@ -52,6 +88,8 @@ const Submit = ({ history }) => {
           id: user.uid,
           name: user.displayName,
         },
+        thumbnail: productThumbs[0] || null,
+        photos: productPhotos,
         voteCount: 1,
         comments: [],
         votes: [
@@ -61,6 +99,8 @@ const Submit = ({ history }) => {
         ],
         created: Date.now(),
       };
+      setThumb([]);
+      setPhotos([]);
       await firebase.db.collection("products").doc(id).set(newProduct);
       history.push("/");
     } catch (e) {
@@ -107,7 +147,25 @@ const Submit = ({ history }) => {
             required
           ></IonInput>
         </IonItem>
-
+        <IonRow>
+          <IonCol>
+            <Upload
+              files={thumb}
+              onChange={setThumb}
+              placeholder="Select Thumbnail"
+            />
+          </IonCol>
+        </IonRow>
+        <IonRow>
+          <IonCol>
+            <Upload
+              files={photos}
+              onChange={setPhotos}
+              placeholder="Select Product Photos"
+              multiple
+            />
+          </IonCol>
+        </IonRow>
         <IonRow>
           <IonCol>
             <IonButton
